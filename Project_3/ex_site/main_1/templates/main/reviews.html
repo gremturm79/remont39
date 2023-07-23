@@ -1,0 +1,98 @@
+{% extends 'main/index.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% if reviews %}
+
+    <form action="{% url 'reviews' %}" method="get" id="search">
+        <div class="input-group mb-3" style="padding-top: 100px; width: 30%; margin: 0 auto">
+  <input type="text" name="search_query" class="form-control" placeholder="Поиск по отзывам"
+         aria-label="Recipient's username"
+         aria-describedby="button-addon2" value="{{ search_query }}">
+  <button class="btn btn-outline-secondary bg-primary" type="submit" id="button-addon2">Найти</button>
+            </div>
+    </form>
+   <div class="warning" hx-get="/clear/" hx-trigger="load delay:2s">
+{% for message in messages %}
+<div class= "alert alert-{{ message.tags }}" role="alert" style="margin: 0 auto; width: 30%; text-align: center">
+  <strong>{{ message }}</strong>
+    </div>
+{% endfor %}
+    </div>
+        {% else %}
+<div class="about">
+        <h3 style="padding-top: 100px; width: 50%; margin: 0 auto">Вы можете оставить отзыв в
+        <a href="{% url 'personal_account' user.id %}">личном кабинете</a></h3>
+    {% endif %}
+    </div>
+<div class="grid_review">
+
+{% for field in reviews %}
+<div class="card" style="width: 22rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{ field.owner }}</h5>
+      <div class="img_rating">
+      <img src="{{ field.image.url }}"  alt="..." style="width: 150px; height: 100px">
+          <div class="rating_star" >
+          {% for fields in field.get_rating %}
+          <img src="{% static 'images/star_icon.png' %}" style="width: 24px; height: 24px" alt="" >
+          {% endfor %}
+          </div>
+      </div>
+    <p class="card-text">{{ field.description }}</p>
+      <p class="card-text">{{ field.date }}</p>
+    <a href="{% url 'write-review' %}" class="card-link">оставить отзыв</a>
+    <a href="{% url 'personal_account' user.id  %}" class="card-link">перейти в личный кабинет</a>
+  </div>
+</div>
+    {% empty %}
+          <div class="false_block" style="height: 340px"></div>
+{% endfor %}
+</div>
+
+ {% if reviews.has_other_pages %}
+        <nav aria-label="...">
+  <ul class="pagination pagination-lg nav_forum" style="padding-top: 30px;">
+      {% if reviews.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ reviews.previous_page_number }}" data-page="{{reviews.previous_page_number}}">
+          &#8249;</a>
+    </li>
+      {% endif %}
+{% for page in custom_range %}
+      {% if page == reviews.number %}
+    <li class="page-item active" aria-current="page">
+      <a class="page-link" href="?page={{page}}" data-page="{{page}}">{{ page }}</a>
+    </li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="?page={{page}}" data-page="{{page}}">{{ page }}</a></li>
+      {% endif %}
+     {% endfor %}
+      {% if reviews.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ reviews.next_page_number }}" data-page="{{reviews.next_page_number}}">&#8250;</a>
+    </li>
+        {% endif %}
+  </ul>
+</nav>
+        {% endif %}
+<script>
+  let searchForm = document.getElementById('search');
+  let pageLink = document.querySelectorAll('.page-link');
+
+  if (searchForm){
+    for(let i=0; pageLink.length > i; i++){
+      pageLink[i].addEventListener('click', function(e){
+        e.preventDefault()
+
+        let page = this.dataset.page;
+
+        searchForm.innerHTML += `<input value=${page} name='page' type='hidden'>`
+        searchForm.submit()
+      })
+    }
+  }
+
+</script>
+{% endblock %}

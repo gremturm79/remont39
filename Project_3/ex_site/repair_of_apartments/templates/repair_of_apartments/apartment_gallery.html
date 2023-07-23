@@ -1,0 +1,17 @@
+{% extends 'main/gallery.html' %}
+{% block content %}
+<div class="gallery">
+  <div class="gallery_wrap">
+	<div class="top">
+    	<ul>
+            {% for image in images %}
+        	<li><a href="#img_{{ image.binding.image.id }}"><img src="{{ image.binding.image.url }}"></a></li>
+            {% endfor %}
+        </ul>
+            {% for image in images %}
+        <a href="#_{{ image.binding.image.id }}" class="lightbox trans" id="img_{{ image.binding.image.id }}"><img src="{{ image.binding.image.url }}"></a>
+            {% endfor %}
+    </div>
+</div>
+</div>
+{% endblock %}

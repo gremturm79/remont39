@@ -1,0 +1,341 @@
+{% extends 'main/index.html' %}
+{% block content %}
+{% load static %}
+<div class="personal-cabinet">
+<div class="personal_account">
+	<div class="main">
+<div class="warning" hx-get="/clear/" hx-trigger="load delay:2s">
+{% for message in messages %}
+<div class= "alert alert-{{ message.tags }}" role="alert" style="position: absolute" id="info">
+  <strong>{{ message }}</strong>
+</div>
+{% endfor %}
+</div>
+  <div class="name_card">
+      <img src="{{ image.url }} " style="width: 75px; height: 75px" alt="">
+      <div style="padding-left: 10px">{{ user.first_name }}</div>
+      <div style="padding-left: 5px">{{ user.last_name }}</div>
+
+  </div>
+  <div class="contact">
+	  <ul>
+
+          <li><span style="font-weight: bolder">Телефон:</span> {{ phone }}</li>
+    <li><span style="font-weight: bolder">Почта:</span> {{ user.email }}</li>
+	  </ul>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Редактировать
+</button>
+
+          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModaldeleteUser">
+  Удалить
+</button>
+
+      {% if user.review_set.all.count == 1 %}
+      <hr>
+      <h5>Спасибо за отзыв !</h5>
+      {% else %}
+      <hr>
+      <h5>Написать отзыв на странице отзывов</h5>
+      <button type="button" class="btn btn-success" data-bs-toggle="modal"
+              data-bs-target="#exampleModalreview"><a href="{% url 'write-review' %}"
+                          style="text-decoration: none; color: white">Оставить отзыв</a></button>
+    {% endif %}
+      <hr>
+
+        {% if summ_count == 0 %}
+      <h5>Рассчитать стоимость работ</h5>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+              data-bs-target="#exampleModalreview"><a href="{% url 'calculate-apartments' %}"
+                          style="text-decoration: none; color: white">перейти к расчёту</a></button>
+      <hr>
+      {% else %}
+        <div class="personal_summa">
+            <form action="{% url 'personal_account' user.id %}" method="post">
+                {% csrf_token %}
+            <h4>Сумма стоимости работ:</h4>
+                {% for field in summa %}
+            <h5>{{ field.summ }} рублей</h5>
+            <h5>от {{ field.date }}</h5>
+                {% endfor %}
+                <button type="submit" class="btn btn-danger btn-lg" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalDelete">
+                    Удалить</button>
+                <input type="hidden"  name="delete_pricing" value="{{user.id}}" />
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Отправить расчёт
+</button>
+                <h5 style="padding-top: 5px">Скачать в формате PDF</h5>
+            </form>
+            <form action="{% url 'view_pdf' %}" method="get">
+            <button type="submit"  class="btn btn-primary btn-lg">Скачать</button>
+            </form>
+            <hr>
+        {% endif %}
+      <h5>Ваша тема на форуме</h5>
+            {% if branch %}
+            {% for field in branch %}
+            <h6 id="delete-forum"><a href="{% url 'forum_discuss' field.id %}">{{ field.title }}</a></h6>
+            <button type="submit" hx-target="#delete-forum" hx-get="/delete-threed/" hx-trigger="click"
+                    class="btn btn-warning">Удалить
+            </button>
+            {% endfor %}
+            {% else %}
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                  data-bs-target="#exampleModalforum">Создать раздел для обсуждения
+          </button>
+            {% endif %}
+            <hr>
+       {% if my_object_data %}
+<div class="location_objects" id="my_object" style="width: 100%">
+            <h5>Объект ремонта</h5>
+            <div class="location_block" >
+                {% for field in my_object_data %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ field.image.url }}" style="height: 250px" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ field.city }} {{ field.street }}</h5>
+                    <p class="card-text">{{ field.description }}</p>
+                    <form action="" method="get">
+                    <input type="hidden" name="object" value="{{user.id}}">
+                    <button type="submit" hx-target="#my_object" hx-get="/delete-object/" hx-trigger="click"
+                            class="btn btn-primary">Удалить</button>
+                    </form>
+                </div>
+            </div>
+                 {% endfor %}
+            </div>
+    {% else %}
+        <h5>Объект ремонта</h5>
+        <button type="button" class="btn btn-success"
+                data-bs-toggle="modal" data-bs-target="#exampleModalobject">Создать
+             объект</button>
+            <div id="see"></div>
+{% endif %}
+</div>
+
+        <!-- тег избранные фото начало-->
+            <hr>
+        <div class="gallery_wrap" style="text-align: center; width: 400px">
+            <div class="gallery_title_wrap">
+          <h4>Избранные фотографии</h4>
+            <a href="{% url 'gallery' %}" style="text-decoration: none"><div class="heart">&#x2665;</div></a>
+            </div>
+	<div class="top">
+    	<ul>
+            {% for image in images_favorite %}
+        	<li style="display: flex" id="close-block" data-block="{{ image.id }}" class="close-block{{image.id}}">
+                <a href="#img_{{ image.id }}">
+                    <img src="{{ image.image.image.url }}" style="width: 200px; height: 150px"></a>
+                 <div class="like-image" title="Удалить">
+                <button class="button button-like remove-favourite" data-id="{{ image.id }}"
+                        id="image-window" >
+                    <i class='fa fa-remove' style='color: rgb(25, 24, 24)'></i>
+                  </button>
+                </div>
+            </li>
+
+            {% endfor %}
+        </ul>
+            {% for image in images_favorite %}
+        <a href="#_{{ image.id }}" class="lightbox trans" id="img_{{ image.id }}">
+            <img src="{{ image.image.image.url }}"></a>
+            {% endfor %}
+    </div>
+
+</div>
+</div>
+        <!-- тег избранные фото конец  -->
+
+</div>
+
+  </div>
+
+</div>
+</div>
+<!-- Button trigger modal -->
+
+
+<!-- Отправить сообщение -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Отправка сообщения</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+          {{ message_view.estimate|linebreaks }}
+
+      </div>
+      <div class="modal-footer">
+
+                      <form action="{% url 'personal_account' user.id %}" method="post">
+                {% csrf_token %}
+
+                <input type="hidden"  name="form_send" value="{{user.id}}" />
+          <button type="submit" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">Отправить</button>
+
+            </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Редактирование -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Редактирование профиля</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form action="" method="post"  enctype="multipart/form-data">
+         {% csrf_token %}
+              {{ profile.as_p }}
+        {% for field in form %}
+              {{ field.errors }}
+        {{ field.label }}
+        {{ field }}
+        {% endfor %}
+              <button type="submit" class="btn btn-primary">Редактировать</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+           </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- Удаление -->
+<div class="modal fade" id="exampleModaldeleteUser" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabeldeleteUser">Вы действительно хотите удалить аккаунт ?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+              <form action="{% url 'delete' %}" method="post">
+          {% csrf_token %}
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" class="btn btn-primary">Удалить</button>
+                        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Создать ветку на форуме -->
+<div class="modal fade" id="exampleModalforum" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabelforum">Написать</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+              <form action="{% url 'personal_account' user.id %}" method="post">
+              {% csrf_token %}
+              {{ category.as_p }}
+              <button type="submit" class="btn btn-primary">Создать
+              </button>
+              <input type="hidden"  name="forum" value="{{user.id}}" />
+                  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Мой объект -->
+<div class="modal" tabindex="-1" id="exampleModalobject" data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabelobject">Создать объект ремонта</h5>
+        <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form class="form-control" action="{% url 'personal_account' user.id %}" method="post"
+                enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ my_object.city.label }}
+                <input type="text" name="city" hx-get="/check-city/" hx-trigger="keyup changed delay:1s"
+                       hx-target="#check_city" hx-swap="outerhtml">
+              <div id="check_city" style="padding-top: 20px; color: blue"></div>
+              {{ my_object.street.label }}
+                {{ my_object.street }}
+              <div style="padding-bottom: 20px"></div>
+              {{ my_object.description.label }}
+                {{ my_object.description }}
+              <div style="padding-bottom: 20px"></div>
+              {{ my_object.street.image }}
+                {{ my_object.image }}
+              <div style="padding-bottom: 20px"></div>
+              {{ my_object.types.label }}
+                {{ my_object.types }}
+              <input type="hidden"  name="my_object" value="{{user.id}}" />
+              <div style="padding-top: 10px">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="submit" class="btn btn-primary" id="spinner_start">Создать</button>
+              </div>
+              <div class="spinner-border text-primary" id="spinner" role="status" style="display: none">
+  <span class="visually-hidden">Loading...</span>
+</div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'css/style1.js' %}"></script>
+<script>
+$('.remove-favourite').on('click', function () {
+
+    let image_id = $(this).data('id');
+    let image = $('#close-block').data('block');
+
+    $.ajax({
+
+        url: '/remove-favourite/',
+
+        type: 'GET',
+
+        data: {
+
+            'image_id': image_id,
+            'display': image
+
+        },
+        success: function (data) {
+
+            $(data.display).css('display', 'none');
+
+        }
+
+    });
+
+});
+$(document).foundation();
+
+$(function() {
+  $('.button-like')
+    .bind('click', function(event) {
+      $(".button-like").toggleClass("liked");
+    })
+});
+
+
+</script>
+<script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+{% endblock %}
+

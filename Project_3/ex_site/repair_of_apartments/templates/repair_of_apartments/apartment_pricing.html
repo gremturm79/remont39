@@ -1,0 +1,77 @@
+{% extends 'main/gallery.html' %}
+<title>{% block title_name %}Прайс лист по ремонту квартир{% endblock %}</title>
+{% block content %}
+<h1>Расценки по ремонту квартире</h1>
+<div class="table_block">
+  <div class="title_table"></div>
+<table>
+  <colgroup span="4"></colgroup>
+  <tr><th colspan="3" style="background: #ede5e5; font-size: 140%">Стены</th></tr>
+  <tr>
+    <th colspan="3" style="background: #cac5c5">Демонтажные работы</th>
+  </tr>
+  <tr>
+    <th >Наименование работ</th>
+    <th >Цена</th>
+    <th >Ед.измерения(м2)</th>
+  </tr>
+  {% for field in dismantling %}
+  <tr>
+      <td>{{ field.title }}</td>
+      <td style="text-align: center">{{ field.price }}</td>
+      <td style="text-align: center">{{ field.unit }}</td>
+  </tr>
+  {% endfor %}
+     <tr>
+    <th colspan="3" style="background: #cac5c5">Штукатурка стен</th>
+  </tr>
+  {% for field in plaster %}
+  <tr>
+      <td>{{ field.title }}</td>
+      <td style="text-align: center">{{ field.price }}</td>
+      <td style="text-align: center">{{ field.unit }}</td>
+  </tr>
+  {% endfor %}
+        <tr>
+    <th colspan="3" style="background: #cac5c5">Шпатлёвка стен</th>
+  </tr>
+  {% for field in putty %}
+  <tr>
+      <td>{{ field.title }}</td>
+      <td style="text-align: center">{{ field.price }}</td>
+      <td style="text-align: center">{{ field.unit }}</td>
+  </tr>
+  {% endfor %}
+           <tr>
+    <th colspan="3" style="background: #cac5c5">Покраска стен</th>
+  </tr>
+      {% for field in paint %}
+  <tr>
+      <td>{{ field.title }}</td>
+      <td style="text-align: center">{{ field.price }}</td>
+      <td style="text-align: center">{{ field.unit }}</td>
+  </tr>
+  {% endfor %}
+               <tr>
+    <th colspan="3" style="background: #cac5c5">Обои</th>
+  </tr>
+      {% for field in wallpaper %}
+  <tr>
+      <td>{{ field.title }}</td>
+      <td style="text-align: center">{{ field.price }}</td>
+      <td style="text-align: center">{{ field.unit }}</td>
+  </tr>
+  {% endfor %}
+                   <tr>
+    <th colspan="3" style="background: #cac5c5">Монтаж стен</th>
+  </tr>
+      {% for field in wall_mounting %}
+  <tr>
+      <td>{{ field.title }}</td>
+      <td style="text-align: center">{{ field.price }}</td>
+      <td style="text-align: center">{{ field.unit }}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

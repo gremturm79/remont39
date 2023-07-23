@@ -1,0 +1,48 @@
+
+{% if my_object_data %}
+<div class="location_objects" id="my_object" style="width: 100%">
+            <div class="location_block" >
+                {% for field in my_object_data %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ field.image.url }}" style="height: 250px" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ field.city }} {{ field.street }}</h5>
+                    <p class="card-text">{{ field.description }}</p>
+                    <form action="" method="get">
+                    <input type="hidden" name="object" value="{{user.id}}">
+                    <button type="submit" hx-target="#my_object" hx-get="/delete-object/" hx-trigger="click"
+                            class="btn btn-primary">Удалить</button>
+                    </form>
+                </div>
+            </div>
+                 {% endfor %}
+            </div>
+    {% else %}
+        <button type="button" class="btn btn-success"
+                data-bs-toggle="modal" data-bs-target="#exampleModalobject">Создать
+            объект</button>
+            <div id="see"></div>
+{% endif %}
+</div>
+
+<div class="modal" tabindex="-1" id="exampleModalobject" data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabelobject">Создать мой объект</h5>
+        <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form hx-post="/create-my-object/"  hx-encoding="multipart/form-data" hx-target="#exampleModalobject">
+              {% csrf_token %}
+                {{ my_object.as_p }}
+
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+
+          <button type="submit" class="btn btn-primary" >Создать</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+{% extends 'main/index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="about">
+    <h1>Оставить отзыв</h1>
+ <div class="main_review">
+         <div class="warning" hx-get="/clear/" hx-trigger="load delay:2s">
+{% for message in messages %}
+<div class= "alert alert-{{ message.tags }}" role="alert">
+  <strong>{{ message }}</strong>
+</div>
+{% endfor %}
+ </div>
+<form action="{% url 'write-review' %}"  method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form_review">
+    {{ field.label }}
+    {{ field }}
+      </div>
+    {% endfor %}
+
+  <input type="submit" value="Оставить отзыв">
+
+    </form>
+
+
+</div>
+</div>
+{% endblock %}

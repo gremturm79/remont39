@@ -1,0 +1,34 @@
+{% extends 'main/index.html' %}
+{% block title_name %}Галерея{% endblock %}
+{% block content %}
+<div class="gallery">
+  <div class="gallery_wrap">
+	<div class="top">
+    	<ul>
+            {% for image in images %}
+        	<li>
+                <a href="#img_{{ image.id }}">
+                    <img src="{{ image.image.image.url }}"></a>
+                <button class="add-favourite" data-id="{{ image.id }}">Add to Favourites</button>
+            </li>
+
+            {% endfor %}
+        </ul>
+            {% for image in images %}
+        <a href="#_{{ image.id }}" class="lightbox trans" id="img_{{ image.id }}"> <img src="{{ image.image.url }}"></a>
+            {% endfor %}
+    </div>
+</div>
+</div>
+
+<script>
+    $(document).foundation();
+
+$(function() {
+  $('.button-like')
+    .bind('click', function(event) {
+      $(".button-like").toggleClass("liked");
+    })
+});
+</script>
+{% endblock %}

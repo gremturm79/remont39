@@ -1,0 +1,21 @@
+{% extends 'repair_of_apartments/index.html' %}
+{% block content %}
+<div class="grid_review" style="padding-top: 150px; padding-bottom: 150px">
+{% for field in all_obj %}
+<div class="card" style="width: 22rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{ field.city }}</h5>
+      <div class="img_rating">
+      <img src="{{ field.image.url }}"  alt="..." style="width: 150px; height: 100px">
+      </div>
+    <p class="card-text">{{ field.description }}</p>
+      <p class="card-text">{{ field.date }}</p>
+  </div>
+</div>
+    {% empty %}
+          <div class="false_block" style="height: 340px">
+              <h2>Добавленные объекты отсутствуют</h2>
+          </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'main/index.html' %}
+{% load static %}
+{% block content %}
+<!-- hx-indicator=".htmx-indicator" -->
+<div class="table_block">
+    <form action="">
+
+    <div class="input-group input-group-lg">
+    <!-- <input class="form-control" hx-get="/found-price/" type="search" name="search"  hx-trigger="keyup"
+           hx-target="#found-price"  hx-swap="outerhtml"> -->
+    <input class="form-control" hx-get="/found/" type="search" name="search"  hx-trigger="keyup changed delay:1s"
+           hx-target="#found-price"  hx-swap="outerhtml">
+    </div>
+
+    </form>
+
+    <div id="found-price" style="padding-top: 20px">
+        {% include 'main/found.html' %}
+
+    </div>
+     <!-- found_price_none -->
+    <div id="not"></div>
+
+<table class="title_table">
+    <thead>
+    <tr style="font-size: 120%">
+        <th>Наименование работ</th>
+        <th>Цена</th>
+        <th>Ед.изм.</th>
+    </tr>
+    </thead>
+          <tr>
+            <th colspan="3" style="background: grey">Демонтаж</th>
+        </tr>
+    {% for field in dismantling %}
+    <tr style="width: 20px;height: 40px">
+        <td>{{ field.title }}</td>
+        <td>{{ field.price }}</td>
+        <td>{{ field.unit }}</td>
+    </tr>
+    {% endfor %}
+              <tr>
+            <th colspan="3" style="background: grey">Штукатурка</th>
+        </tr>
+    {% for field in plaster %}
+    <tr style="width: 20px;height: 40px">
+        <td>{{ field.title }}</td>
+        <td>{{ field.price }}</td>
+        <td>{{ field.unit }}</td>
+    </tr>
+    {% endfor %}
+                 <tr>
+            <th colspan="3" style="background: grey">Покраска</th>
+        </tr>
+    {% for field in painting %}
+    <tr style="width: 20px;height: 40px">
+        <td>{{ field.title }}</td>
+        <td>{{ field.price }}</td>
+        <td>{{ field.unit }}</td>
+    </tr>
+    {% endfor %}
+                    <tr>
+            <th colspan="3" style="background: grey">Шпатлёвка</th>
+        </tr>
+    {% for field in putty %}
+    <tr style="width: 20px;height: 40px">
+        <td>{{ field.title }}</td>
+        <td>{{ field.price }}</td>
+        <td>{{ field.unit }}</td>
+    </tr>
+    {% endfor %}
+         <tr>
+            <th colspan="3" style="background: grey">Обои</th>
+        </tr>
+    {% for field in wallpaper %}
+    <tr style="width: 20px;height: 40px">
+        <td>{{ field.title }}</td>
+        <td>{{ field.price }}</td>
+        <td>{{ field.unit }}</td>
+    </tr>
+    {% endfor %}
+        <tr>
+            <th colspan="3" style="background: grey">Монтаж стен</th>
+        </tr>
+    {% for field in montage_wall %}
+    <tr style="width: 20px;height: 40px">
+        <td>{{ field.title }}</td>
+        <td>{{ field.price }}</td>
+        <td>{{ field.unit }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

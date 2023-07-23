@@ -1,0 +1,27 @@
+{% extends 'main/index.html' %}
+{% block content %}
+{% load static %}
+<div class="block_register">
+
+    <div class="register_wrapper">
+        <form action="" method="post" enctype="multipart/form-data" class="bg">
+                <div class="warning" hx-get="/clear/" hx-trigger="load delay:2s">
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+  <strong>{{ message }}</strong>
+</div>
+{% endfor %}
+</div>
+            <a href="{% url 'index' %}"><img src="{% static 'images/home.ico' %}"
+                                         style="width: 25px; height: 25px; margin-top: -40px"></a>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="center">
+            <button type="submit" class="btn_self">Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+

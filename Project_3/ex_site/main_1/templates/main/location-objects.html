@@ -1,0 +1,25 @@
+{% extends 'main/index.html' %}
+{% block content %}
+{% load static %}
+{% if my_object %}
+<div class="location_objects" id="my_object"
+     style="width: 100%; text-align: center; padding-top: 150px; padding-bottom:100px">
+            <div class="location_block" >
+                {% for field in my_object %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ field.image.url }}" style="height: 215px" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ field.city }}</h5>
+                    <h5 class="card-title">улица {{ field.street }}</h5>
+                    <p class="card-text">{{ field.description }}</p>
+                </div>
+            </div>
+                 {% endfor %}
+            </div>
+</div>
+{% else %}
+<div class="my_object" style="padding-top: 250px; padding-bottom: 260px; display: flex">
+    <h2 style="margin: 0 auto">Объект был удалён заказчиком</h2>
+</div>
+{% endif %}
+{% endblock %}

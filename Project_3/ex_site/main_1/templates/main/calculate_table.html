@@ -1,0 +1,37 @@
+{% extends 'main/index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content">
+   <div class="wrap">
+       <div class="warning">
+{% for message in messages %}
+<div class= "alert alert-info" role="alert">
+  <strong>{{ message }} <a href="{% url 'personal_account'  user.id %}">для просмотра можно перейти в личный кабинет</a></strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+</div>
+       <h1>Калькулятор стоимости работ</h1>
+       <form action="{% url 'calculate_table' %}" method="post" class="form_calculate">
+    {% csrf_token %}
+            <div class="wrap_field_form">
+    {% for i in obj %}
+                <div class="wrap_field">
+                    <ul>
+                    <li>{{ i }}</li>
+                    </ul>
+                    <ul>
+                    <li><input type='number'   name="square" placeholder="м2"></li>
+                    </ul>
+              </div>
+    {% endfor %}
+              <input type="submit" value="Рассчитать"  class="btn_calculate">
+            </div>
+
+       </form>
+
+       </div>
+</div>
+{% endblock %}
+

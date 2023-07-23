@@ -1,0 +1,49 @@
+{% extends 'main/index.html' %}
+{% block title_name %}Наши услуги{% endblock %}
+{% block content %}
+<div class="warning" hx-get="/clear/" hx-trigger="load delay:2s">
+{% for message in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>!!!</strong>{{ message }}
+</div>
+{% endfor %}
+</div>
+
+
+<div class="about">
+
+        <div class="about_wrap">
+        {% for service in services %}
+       <div class="column1">
+
+        <div>
+            <h1>{{ service.title }}</h1>
+          </div>
+
+           {% if service.title == 'Ремонт квартир' %}
+              <div class="column1_text">
+              {{ service.description|truncatechars:350 }}
+         </div>
+       <div class="more">
+           <a href="{% url 'apartment_gallery' %}"><img src="{{ service.services_image.image.url }}"
+                                 alt="" border="0" class="about_img" /></a>
+
+        </div>
+
+                <div><a href="{% url 'repair_of_apartments' %}">&gt</a></div>
+           {% else %}
+                  <div class="column1_text">
+              {{ service.description|truncatechars:252 }}
+         </div>
+                <div class="more">
+           <a href="{% url 'bathroom_gallery' %}"><img src="{{ service.services_image.image.url }}"
+                           alt="" border="0" class="about_img" /></a>
+        </div>
+           <div><a href="{% url 'renovation_bathroom' %}">&gt</a></div>
+           {% endif %}
+      </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
